@@ -1,7 +1,7 @@
 import random
 import requests
 from faker import Faker
-from jobplus.models import db, User, CompanyDetail, job
+from jobplus.models import db, User, CompanyDetail, Job
 
 
 fake = Faker('zh_CN')
@@ -79,20 +79,22 @@ class FakerData(object):
         for i in range(100):
             company = random.choice(companies)
             job = Job(
-                name=fake.word() + '???',
+                name=fake.word() + 'Gongchengshi',
                 salary_low=random.randrange(3000, 8000, 1000),
                 salary_high=random.randrange(8000, 20000, 1000),
                 location=company.detail.location,
                 tags=','.join([fake.word() for i in range(3)]),
                 company=company,
-                experience_requirement=random.choice(['??', '1', '1-3', '3-5', '5+']),
-                degree_requirement=random.choice(['??', '??', '??', '??']),
+                experience_requirement=random.choice(['', '1', '1-3', '3-5', '5+']),
+                degree_requirement=random.choice(['NoLimit', 'Benke', 'Shoushi', 'Boshi']),
             )
             db.session.add(job)
             db.session.commit()
 
 
-if __name__ == '__main__':
+#if __name__ == '__main__':
+def run():
     f = FakerData()
-    f.fake_company()
+   # f.fake_company()
+    f.fake_job()
 
