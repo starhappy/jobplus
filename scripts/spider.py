@@ -95,6 +95,12 @@ class FakerData(object):
 #if __name__ == '__main__':
 def run():
     f = FakerData()
+Ai`
+B
+B
+B
+C
+
    # f.fake_company()
     f.fake_job()
 
