@@ -44,7 +44,12 @@
             <li class="dropdown">
             <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><span id="username">{{ current_user.name }}</span><span class="caret"></span></a>
               <ul class="dropdown-menu">
-                <li><a href="#">My Prefix</a></li>
+                    {% if current_user.is_authenticated and current_user.is_company %}
+                 <li class="{% if active == 'company' %}active{% endif %}"><a href="{{ url_for('company.profile') }}">Company profile<span class="sr-only">(current)</span></a></li>
+                  {% endif %}
+                    {% if current_user.is_authenticated and current_user.is_staff %}
+                <li><a href="{{ url_for('user.profile') }}">My Prefix</a></li>
+                {% endif %}
                 <li role="separator" class="divider"></li>
                 <li><a href="{{ url_for('front.logout') }}">Logout</a></li> </ul>
             </li>
@@ -81,7 +86,7 @@
       {% block tail_js %}
       <script src="https://cdn.jsdelivr.net/npm/jquery@3.2.1/dist/jquery.min.js"></script>
       <script src="https://cdn.jsdelivr.net/npm/bootstrap@3.3.7/dist/js/bootstrap.min.js"></script>
-      <script src="static/main.js"></script>
+      <script src="{{ url_for('static', filename='main.js') }}" ></script>
       {% endblock %}
     </body>
 </html>

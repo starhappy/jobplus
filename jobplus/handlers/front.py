@@ -26,7 +26,7 @@ def login():
     if form.validate_on_submit():
         user = User.query.filter_by(email=form.email.data).first()
         if user.is_disable:
-            flash('???????')
+            flash('用户已经被禁用')
             return redirect(url_for('front.login'))
         else:
             login_user(user, form.remember_me.data)
@@ -44,7 +44,7 @@ def userregister():
     form = RegisterForm()
     if form.validate_on_submit():
         form.create_user()
-        flash('?????????', 'success')
+        flash('注册成功,请登录!', 'success')
         return redirect(url_for('.login'))
     return render_template('userregister.html', form=form)
 
@@ -52,13 +52,13 @@ def userregister():
 @front.route('/companyregister', methods=['GET', 'POST'])
 def companyregister():
     form = RegisterForm()
-    form.name.label = u'????'
+    form.name.label = u'企业名称'
     if form.validate_on_submit():
         company_user = form.create_user()
         company_user.role = User.ROLE_COMPANY
         db.session.add(company_user)
         db.session.commit()
-        flash('?????????', 'success')
+        flash('注册成功,请登录!', 'success')
         return redirect(url_for('.login'))
     return render_template('companyregister.html', form=form)
 
@@ -67,5 +67,5 @@ def companyregister():
 @login_required
 def logout():
     logout_user()
-    flash('???????', 'success')
+    flash('您已经退出登录!', 'success')
     return redirect(url_for('.index'))

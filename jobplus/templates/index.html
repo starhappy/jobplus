@@ -7,14 +7,14 @@
 <div class="jumbotron">
   <div class="container">
     <h1>JOBPLUS</h1>
-    <p>?????????????</p>
+    <p>领先的互联网求职 招聘平台</p>
   </div>
 </div>
 {% endblock %}
 
 {% block body %}
 <ul class="nav nav-tabs list-title">
-  <li role="presentation" class="active"><a href="#">????</a></li>
+  <li role="presentation" class="active"><a href="#">最新职位</a></li>
 </ul>
 
 <div class="job-list">
@@ -24,11 +24,11 @@
 </div>
 
 <p class="list-more">
-<a href="{{ url_for('job.index') }}" class="btn btn-success btn-lg list-more-btn">????</a>
+<a href="{{ url_for('job.index') }}" class="btn btn-success btn-lg list-more-btn">查看更多</a>
 </p>
 
 <ul class="nav nav-tabs list-title">
-<li role="presentation" class="active"><a href="#">????</a></li>
+<li role="presentation" class="active"><a href="#">最新公司</a></li>
 </ul>
 
 <div class="company-list">
@@ -38,6 +38,6 @@
 </div>
 
 <p class="list-more">
-<a href="{{ url_for('company.index') }}" class="btn btn-success btn-lg list-more-btn">????</a>
+<a href="{{ url_for('company.index') }}" class="btn btn-success btn-lg list-more-btn">查看更多</a>
 </p>
 {% endblock %}

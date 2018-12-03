@@ -8,35 +8,35 @@ from jobplus.models import db, User, CompanyDetail, Job
 
 
 class LoginForm(FlaskForm):
-    email = StringField('??', validators=[Required(), Email()])
-    password = PasswordField('??', validators=[Required(), Length(6, 24)])
-    remember_me = BooleanField('???')
-    submit = SubmitField('??')
+    email = StringField('邮箱', validators=[Required(), Email()])
+    password = PasswordField('密码', validators=[Required(), Length(6, 24)])
+    remember_me = BooleanField('记住我')
+    submit = SubmitField('提交')
 
     def validate_email(self, field):
         if field.data and not User.query.filter_by(email=field.data).first():
-            raise ValidationError('??????')
+            raise ValidationError('该邮箱未注册')
 
     def validate_password(self, field):
         user = User.query.filter_by(email=self.email.data).first()
         if user and not user.check_password(field.data):
-            raise ValidationError('????')
+            raise ValidationError('密码错误')
 
 
 class RegisterForm(FlaskForm):
-    name = StringField('???', validators=[Required(), Length(3, 24)])
-    email = StringField('??', validators=[Required(), Email()])
-    password = PasswordField('??', validators=[Required(), Length(6, 24)])
-    repeat_password = PasswordField('????', validators=[Required(), EqualTo('password')])
-    submit = SubmitField('??')
+    name = StringField('用户名', validators=[Required(), Length(3, 24)])
+    email = StringField('邮箱', validators=[Required(), Email()])
+    password = PasswordField('密码', validators=[Required(), Length(6, 24)])
+    repeat_password = PasswordField('重复密码', validators=[Required(), EqualTo('password')])
+    submit = SubmitField('提交')
 
     def validate_username(self, field):
         if User.query.filter_by(name=field.data).first():
-            raise ValidationError('??????')
+            raise ValidationError('名字已经存在')
 
     def validate_email(self, field):
         if User.query.filter_by(email=field.data).first():
-            raise ValidationError('??????')
+            raise ValidationError('邮箱已经存在')
 
     def create_user(self):
         user = User(name=self.name.data,
@@ -48,18 +48,18 @@ class RegisterForm(FlaskForm):
 
 
 class UserProfileForm(FlaskForm):
-    real_name = StringField('??', [Required()])
-    email = StringField('??', validators=[Required(), Email()])
-    password = PasswordField('??(???????)')
-    phone = StringField('???')
-    work_years = IntegerField('????')
-    resume = FileField('????', validators=[FileRequired()])
-    submit = SubmitField('??')
+    real_name = StringField('姓名', [Required()])
+    email = StringField('邮箱', validators=[Required(), Email()])
+    password = PasswordField('密码(不填写保持不变)')
+    phone = StringField('手机号')
+    work_years = IntegerField('工作年限')
+    resume = FileField('上传简历', validators=[FileRequired()])
+    submit = SubmitField('提交')
 
     def validate_phone(self, field):
         phone = field.data
         if phone[:2] not in ('13', '15', '18') and len(phone) != 11:
-            raise ValidationError('?????????')
+            raise ValidationError('请输入有效手机号')
 
     def upload_resume(self):
         f = self.resume.data
@@ -72,7 +72,7 @@ class UserProfileForm(FlaskForm):
         ))
         return filename
 
-    def update_profile(self, user):
+    def updated_profile(self, user):
         user.real_name = self.real_name.data
         user.email = self.email.data
         if self.password.data:
@@ -86,17 +86,17 @@ class UserProfileForm(FlaskForm):
 
 
 class CompanyProfileForm(FlaskForm):
-    name = StringField('????')
-    email = StringField('??', validators=[Required(), Email()])
-    phone = StringField('???')
-    password = PasswordField('??(???????)')
-    slug = StringField('Slug', validators=[Required(), Length(3, 24)])
-    location = StringField('??', validators=[Length(0, 64)])
-    site = StringField('????', validators=[Length(0, 64)])
+    name = StringField('企业名称')
+    email = StringField('邮箱', validators=[Required(), Email()])
+    phone = StringField('手机号')
+    password = PasswordField('密码(不填写保持不变)')
+   # slug = StringField('Slug', validators=[Required(), Length(3, 24)])
+    location = StringField('地址', validators=[Length(0, 64)])
+    site = StringField('公司网站', validators=[Length(0, 64)])
     logo = StringField('Logo')
-    description = StringField('?????', validators=[Length(0, 100)])
-    about = TextAreaField('????', validators=[Length(0, 1024)])
-    submit = SubmitField('??')
+    description = StringField('一句话描述', validators=[Length(0, 100)])
+    about = TextAreaField('公司详情', validators=[Length(0, 1024)])
+    submit = SubmitField('提交')
 
     def validate_phone(self, field):
         phone = field.data
@@ -106,6 +106,8 @@ class CompanyProfileForm(FlaskForm):
     def updated_profile(self, user):
         user.name = self.name.data
         user.email = self.email.data
+        user.phone = self.phone.data
+        
         if self.password.data:
             user.password = self.password.data
 
@@ -114,6 +116,7 @@ class CompanyProfileForm(FlaskForm):
         else:
             detail = CompanyDetail()
             detail.user_id = user.id
+      
         self.populate_obj(detail)
         db.session.add(user)
         db.session.add(detail)
@@ -121,11 +124,11 @@ class CompanyProfileForm(FlaskForm):
 
 
 class UserEditForm(FlaskForm):
-    email = StringField('??', validators=[Required(), Email()])
-    password = PasswordField('??')
-    real_name = StringField('??')
-    phone = StringField('???')
-    submit = SubmitField('??')
+    email = StringField('邮箱', validators=[Required(), Email()])
+    password = PasswordField('密码')
+    real_name = StringField('姓名')
+    phone = StringField('手机号')
+    submit = SubmitField('提交')
 
     def update(self, user):
         self.populate_obj(user)
@@ -136,17 +139,18 @@ class UserEditForm(FlaskForm):
 
 
 class CompanyEditForm(FlaskForm):
-    name = StringField('????')
-    email = StringField('??', validators=[Required(), Email()])
-    password = PasswordField('??')
-    phone = StringField('???')
-    site = StringField('????', validators=[Length(0, 64)])
-    description = StringField('?????', validators=[Length(0, 100)])
-    submit = SubmitField('??')
+    name = StringField('企业名称')
+    email = StringField('邮箱', validators=[Required(), Email()])
+    password = PasswordField('密码')
+    phone = StringField('手机号')
+    site = StringField('公司网站', validators=[Length(0, 64)])
+    description = StringField('一句话简介', validators=[Length(0, 100)])
+    submit = SubmitField('提交')
 
     def update(self, company):
         company.name = self.name.data
         company.email = self.email.data
+	 
         if self.password.data:
             company.password = self.password.data
         if company.detail:
@@ -156,21 +160,22 @@ class CompanyEditForm(FlaskForm):
             detail.user_id = company.id
         detail.site = self.site.data
         detail.description = self.description.data
+
         db.session.add(company)
         db.session.add(detail)
         db.session.commit()
 
 
 class JobForm(FlaskForm):
-    name = StringField('????')
-    salary_low = IntegerField('????')
-    salary_high = IntegerField('????')
-    location = StringField('????')
-    tags = StringField('????????,???')
+    name = StringField('职位名称')
+    salary_low = IntegerField('最低薪酬')
+    salary_high = IntegerField('最高薪酬')
+    location = StringField('工作地点')
+    tags = StringField('职位标签(多个用,隔开)')
     experience_requirement = SelectField(
-        '????(?)',
+        '经验要求(年)',
         choices=[
-            ('??', '??'),
+            ('不限', '不限'),
             ('1', '1'),
             ('2', '2'),
             ('3', '3'),
@@ -180,17 +185,17 @@ class JobForm(FlaskForm):
         ]
     )
     degree_requirement = SelectField(
-        '????',
+        '学历要求',
         choices=[
-            ('??', '??'),
-            ('??', '??'),
-            ('??', '??'),
-            ('??', '??'),
-            ('??', '??')
+            ('不限', '不限'),
+            ('专科', '专科'),
+            ('本科', '本科'),
+            ('硕士', '硕士'),
+            ('博士', '博士')
         ]
     )
-    description = TextAreaField('????', validators=[Length(0, 1500)])
-    submit = SubmitField('??')
+    description = TextAreaField('职位描述', validators=[Length(0, 1500)])
+    submit = SubmitField('发布')
 
     def create_job(self, company):
         job = Job()

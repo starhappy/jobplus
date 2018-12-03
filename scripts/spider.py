@@ -79,14 +79,14 @@ class FakerData(object):
         for i in range(100):
             company = random.choice(companies)
             job = Job(
-                name=fake.word() + 'Gongchengshi',
+                name=fake.word() + '工程师',
                 salary_low=random.randrange(3000, 8000, 1000),
                 salary_high=random.randrange(8000, 20000, 1000),
                 location=company.detail.location,
                 tags=','.join([fake.word() for i in range(3)]),
                 company=company,
-                experience_requirement=random.choice(['', '1', '1-3', '3-5', '5+']),
-                degree_requirement=random.choice(['NoLimit', 'Benke', 'Shoushi', 'Boshi']),
+                experience_requirement=random.choice(['不限', '1', '1-3', '3-5', '5+']),
+                degree_requirement=random.choice(['不限', '本科', '硕士', '博士']),
             )
             db.session.add(job)
             db.session.commit()
@@ -95,12 +95,6 @@ class FakerData(object):
 #if __name__ == '__main__':
 def run():
     f = FakerData()
-Ai`
-B
-B
-B
-C
-
-   # f.fake_company()
+    f.fake_company()
     f.fake_job()
 

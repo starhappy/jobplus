@@ -39,14 +39,16 @@ def company_jobs(company_id):
 @login_required
 def profile():
     if not current_user.is_company:
-        flash('???????', 'warning')
+        flash('您不是企业用户', 'warning')
         return redirect(url_for('front.index'))
     form = CompanyProfileForm(obj=current_user.company_detail)
     form.name.data = current_user.name
     form.email.data = current_user.email
+    form.phone.data = current_user.phone
+
     if form.validate_on_submit():
         form.updated_profile(current_user)
-        flash('????????', 'success')
+        flash('企业信息更新成功', 'success')
         return redirect(url_for('front.index'))
     return render_template('company/profile.html', form=form)
 
@@ -94,7 +96,7 @@ def admin_apply_reject(company_id, delivery_id):
     if current_user.id != company_id:
         abort(404)
     d.status = Delivery.STATUS_REJECT
-    flash('???????', 'success')
+    flash('已经拒绝该投递', 'success')
     db.session.add(d)
     db.session.commit()
     return redirect(url_for('company.admin_apply', company_id=company_id))
@@ -107,7 +109,7 @@ def admin_apply_accept(company_id, delivery_id):
     if current_user.id != company_id:
         abort(404)
     d.status = Delivery.STATUS_ACCEPT
-    flash('???????, ???????', 'success')
+    flash('已经接受该投递, 可以安排面试了', 'success')
     db.session.add(d)
     db.session.commit()
     return redirect(url_for('company.admin_apply', company_id=company_id))
@@ -121,7 +123,7 @@ def admin_publish_job(company_id):
     form = JobForm()
     if form.validate_on_submit():
         form.create_job(current_user)
-        flash('??????', 'success')
+        flash('职位创建成功', 'success')
         return redirect(url_for('company.admin_index', company_id=current_user.id))
     return render_template('company/publish_job.html', form=form, company_id=company_id)
 
@@ -137,7 +139,7 @@ def admin_edit_job(company_id, job_id):
     form = JobForm(obj=job)
     if form.validate_on_submit():
         form.update_job(job)
-        flash('??????', 'success')
+        flash('职位更新成功', 'success')
         return redirect(url_for('company.admin_index', company_id=current_user.id))
     return render_template('company/edit_job.html', form=form, company_id=company_id, job=job)
 
@@ -152,5 +154,5 @@ def admin_delete_job(company_id, job_id):
         abort(404)
     db.session.delete(job)
     db.session.commit()
-    flash('??????', 'success')
+    flash('职位更新成功', 'success')
     return redirect(url_for('company.admin_index', company_id=current_user.id))

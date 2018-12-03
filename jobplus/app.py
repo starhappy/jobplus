@@ -34,16 +34,16 @@ def register_filters(app):
         now = datetime.datetime.utcnow()
         delta = now - value
         if delta.days > 365:
-            return '{}??'.format(delta.days // 365)
+            return '{}年前'.format(delta.days // 365)
         if delta.days > 30:
-            return '{}??'.format(delta.days // 30)
+            return '{}月前'.format(delta.days // 30)
         if delta.days > 0:
-            return '{}??'.format(delta.days)
+            return '{}天前'.format(delta.days)
         if delta.seconds > 3600:
-            return '{}???'.format(delta.seconds // 3600)
+            return '{}小时前'.format(delta.seconds // 3600)
         if delta.seconds > 60:
-            return '{}???'.format(delta.seconds // 60)
-        return '??'
+            return '{}分钟前'.format(delta.seconds // 60)
+        return '刚刚'
 
 def register_error_hanlers(app):
     """ ??????????????? JSON ??

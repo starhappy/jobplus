@@ -28,9 +28,9 @@ def detail(job_id):
 def apply(job_id):
     job = Job.query.get_or_404(job_id)
     if current_user.resume_url is None:
-        flash('?????????', 'warnning')
+        flash('请上传简历后在投递', 'warnning')
     elif job.current_user_is_applied:
-        flash('????????', 'warnning')
+        flash('已经投递过该职位', 'warnning')
     else:
         d = Delivery(
             job_id=job.id,
@@ -39,7 +39,7 @@ def apply(job_id):
         )
         db.session.add(d)
         db.session.commit()
-        flash('????', 'success')
+        flash('投递成功', 'success')
     return redirect(url_for('job.detail', job_id=job.id))
 
 
@@ -50,12 +50,12 @@ def disable(job_id):
     if not current_user.is_admin and current_user.id != job.company.id:
         abort(404)
     if job.is_disable:
-        flash('??????', 'warnning')
+        flash('职位已经下线', 'warnning')
     else:
         job.is_disable = True
         db.session.add(job)
         db.session.commit()
-        flash('??????', 'success')
+        flash('职位下线成功', 'success')
     if current_user.is_admin:
         return redirect(url_for('admin.jobs'))
     else:
@@ -69,12 +69,12 @@ def enable(job_id):
     if not current_user.is_admin and current_user.id != job.company.id:
         abort(404)
     if not job.is_disable:
-        flash('??????', 'warnning')
+        flash('职位已经上线', 'warnning')
     else:
         job.is_disable = False
         db.session.add(job)
         db.session.commit()
-        flash('??????', 'success')
+        flash('职位上线成功', 'success')
     if current_user.is_admin:
         return redirect(url_for('admin.jobs'))
     else:

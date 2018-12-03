@@ -9,15 +9,15 @@
   <div class="container">
     <div class="col-md-8">
       <h2>{{ job.name }}</h2>
-      <span class="timesince">{{ job.created_at | timesince }}??</span>
-      <p><span class="job-salary">{{ job.salary_low }}-{{ job.salary_high }}</span>&nbsp;??{{ job.experience_requirement }} {% if job.experience_requirement != '??' %}?{% endif %} ??{{ job.degree_requirement }}</p>
+      <span class="timesince">{{ job.created_at | timesince }}发布</span>
+      <p><span class="job-salary">{{ job.salary_low }}-{{ job.salary_high }}</span>&nbsp;经验{{ job.experience_requirement }} {% if job.experience_requirement != '不限' %}年{% endif %} 学历{{ job.degree_requirement }}</p>
     </div>
     <div class="col-md-4">
       {% if current_user.is_authenticated %}
         {% if not job.current_user_is_applied %}
-          <a href="{{ url_for('job.apply', job_id=job.id) }}"class="btn btn-success btn-lg dilivery-btn">????</a>
+          <a href="{{ url_for('job.apply', job_id=job.id) }}"class="btn btn-success btn-lg dilivery-btn">投递简历</a>
         {% else %}
-          <a href="#"class="btn btn-success btn-lg dilivery-btn" disabled="disabled">???</a>
+          <a href="#"class="btn btn-success btn-lg dilivery-btn" disabled="disabled">已投递</a>
         {% endif %}
       {% endif %}
     </div>
@@ -28,10 +28,10 @@
 {% block body %}
 <div class="col-md-8">
   <div class="job-detail">
-    <h3>????</h3> <br>
+    <h3>职位标签</h3> <br>
     <p>{{ job.tags }}</p>
     <br>
-    <h3>????</h3> <br>
+    <h3>职位描述</h3> <br>
     <p>{{ job.description }}</p>
   </div>
 </div>
@@ -47,8 +47,8 @@
 </div>
 
   <h4>{{ job.company.name }}</h4>
-  <p>???{{ job.company.detail.field }}</p>
-  <p>???{{ job.company.detail.finance_stage }}</p>
-  <p>???{{ job.company.detail.location }}</p>
+  <p>领域: {{ job.company.detail.field }}</p>
+  <p>融资: {{ job.company.detail.finance_stage }}</p>
+  <p>城市: {{ job.company.detail.location }}</p>
 </div>
 {% endblock %}
